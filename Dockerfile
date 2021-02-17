@@ -33,13 +33,13 @@ RUN apt-get install -y --no-install-recommends \
 	poppler-utils ghostscript libmagickwand-6.q16-dev libsnmp-dev libedit-dev libreadline6-dev libsodium-dev \
 	freetds-bin freetds-dev freetds-common libct4 libsybdb5 tdsodbc libreadline-dev librecode-dev libpspell-dev libonig-dev
 
-# Исправление docker-php-ext-install pdo_dblib
+# Исправление docker-php-ext-install pdo_dblib для архитектуры x86_64
 # https://stackoverflow.com/questions/43617752/docker-php-and-freetds-cannot-find-freetds-in-know-installation-directories
-RUN ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/
+# RUN ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/
 
 # Для установки модулей используем команду docker-php-ext-install.
 # RUN docker-php-ext-configure hash --with-mhash && \
-# 	docker-php-ext-install hash
+#	docker-php-ext-install hash
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
 	docker-php-ext-install imap iconv
 
@@ -63,7 +63,7 @@ RUN docker-php-ext-install tidy tokenizer zend_test zip
 # RUN docker-php-ext-install filter reflection spl standard
 # RUN docker-php-ext-install pdo_firebird pdo_oci
 
-# Установка расширений pecl
+# Установка расширений pecl-репозитория
 RUN pecl install ds && \
 	pecl install imagick && \
 	pecl install igbinary && \
@@ -77,13 +77,13 @@ RUN pecl install mongodb && docker-php-ext-enable mongodb
 # 	pecl install ssh2-1.1.2 && \
 # docker-php-ext-enable ssh2
 
-# Установка xdebug
+# Установка отладчика xdebug
 # RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 RUN yes "" | pecl install msgpack && \
 	docker-php-ext-enable msgpack
 
-# Установка APCu
+# Установка APCu для кэширования ооооочень горячих данных. Что-то большое лучше положить в memcache/redis
 RUN pecl install apcu && \
 	docker-php-ext-enable apcu --ini-name docker-php-ext-10-apcu.ini
 
@@ -101,9 +101,9 @@ RUN apt-get update -y && apt-get install -y apt-transport-https locales gnupg
 
 # RUN docker-php-ext-configure spl && docker-php-ext-install spl
 
-# Установка GD
+# Установка библиотеки GD
 RUN docker-php-ext-configure gd \
-	#	--with-png \
+        --with-png \
 	--with-jpeg \
 	--with-xpm \
 	--with-webp \
@@ -129,14 +129,14 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 	mv composer.phar /usr/local/sbin/composer && \
 	chmod +x /usr/local/sbin/composer
 
-# Установка агента NewRelic
+# Установка системы мониторинга NewRelic
 RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
 	curl https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
 	apt-get -y update && \
 	DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5 newrelic-sysmond && \
 	export NR_INSTALL_SILENT=1 && newrelic-install install
 
-# Установка SendGrid
+# Установка службы рассылок SendGrid
 RUN echo "postfix postfix/mailname string localhost" | debconf-set-selections && \
 	echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
 	DEBIAN_FRONTEND=noninteractive apt-get install postfix libsasl2-modules -y
@@ -161,4 +161,4 @@ RUN apt-get remove -y git && apt-get autoremove -y && apt-get clean && rm -rf /v
 WORKDIR /var/www
 
 # Запускаем контейнер
-CMD ["php-fpm"]
+CMD ["php-fpm-full"]
