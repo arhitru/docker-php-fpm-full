@@ -187,7 +187,7 @@ Docker Compose:
 
 <code>docker run --rm -it arhitru/php-fpm-full php -m</code>
 <br>
-сыводит список установленных расширений
+водит список установленных расширений
 
 Extensions that failed to build from 7.3 to 7.4:
 - mhash (Implemented RFC: The hash extension is now an integral part of PHP and cannot be disabled)
