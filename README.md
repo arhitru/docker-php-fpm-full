@@ -34,7 +34,7 @@ Cоздаёт пользователя с именем php-fpm с UID:GUID 1000:
 
 <code>SENDGRID_API_KEY=api_key_string</code>
 <br>
-меняет отправку электронной почты по умолчанию на SendGrid. Google Cloud блокирует SMTP-порт 25 по умолчанию, поэтому это может быть полезным решением для настройки альтернативной маршрутизации электронной почты до запуска менеджера php-fpm..
+меняет отправку электронной почты по умолчанию на SendGrid. Google Cloud блокирует SMTP-порт 25 по умолчанию, поэтому это может быть полезным решением для настройки альтернативной маршрутизации электронной почты до запуска менеджера php-fpm.
 
 <code>TEST_EMAIL=email@domain.com</code>
 <br>
@@ -189,9 +189,9 @@ Docker Compose:
 <br>
 водит список установленных расширений
 
-Extensions that failed to build from 7.3 to 7.4:
-- mhash (Implemented RFC: The hash extension is now an integral part of PHP and cannot be disabled)
-- interbase (Unbundled the InterBase extension and moved it to PECL)
-- recode (Unbundled the recode extension)
-- wddx (Deprecated and unbundled the WDDX extension)
+Расширения не включённые в сборку 7.4:
+- mhash (Реализован в RFC: расширение хэша теперь является неотъемлемой частью PHP и не может быть отключено)
+- interbase (Разделение расширения InterBase и перемещение его в PECL)
+- recode (Расширение перекодирования)
+- wddx (Устарело и не собирается)
 - docker-php-ext-configure gd --with-png только PNG
